@@ -1,0 +1,167 @@
+<div class="employee-portal">
+  <div class="portal-header">
+    <h1>Employee Portal</h1>
+    <div class="header-actions">
+      <div class="search-box">
+        <input
+          type="text"
+          placeholder="Search employees..."
+          [(ngModel)]="searchTerm"
+          (input)="filterEmployees()"
+        />
+        <span class="search-icon">🔍</span>
+      </div>
+      <button class="add-btn" (click)="openAddModal()">
+        + Add Employee
+      </button>
+    </div>
+  </div>
+
+  <div class="employees-grid">
+    <div class="employee-card" *ngFor="let employee of filteredEmployees">
+      <div class="employee-avatar">
+        {{ employee.name.charAt(0) }}
+      </div>
+      <div class="employee-info">
+        <h3>{{ employee.name }}</h3>
+        <p class="position">{{ employee.position }}</p>
+        <p class="department">{{ employee.department }}</p>
+        <p class="email">{{ employee.email }}</p>
+        <p class="phone">{{ employee.phone }}</p>
+        <div class="employee-meta">
+          <span class="salary">${{ employee.salary | number }}</span>
+          <span class="status" [class]="employee.status">{{ employee.status }}</span>
+        </div>
+      </div>
+      <div class="employee-actions">
+        <button class="edit-btn" (click)="openEditModal(employee)">Edit</button>
+        <button class="delete-btn" (click)="deleteEmployee(employee.id!)">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="filteredEmployees.length === 0">
+    <div class="empty-icon">👥</div>
+    <h3>No employees found</h3>
+    <p *ngIf="searchTerm">Try adjusting your search criteria</p>
+    <p *ngIf="!searchTerm">Get started by adding your first employee</p>
+    <button class="add-btn" (click)="openAddModal()" *ngIf="!searchTerm">
+      + Add Employee
+    </button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ isEditing ? 'Edit Employee' : 'Add New Employee' }}</h2>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+    
+    <form class="modal-form" (ngSubmit)="saveEmployee()">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Name *</label>
+          <input
+            type="text"
+            [(ngModel)]="currentEmployee.name"
+            name="name"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input
+            type="email"
+            [(ngModel)]="currentEmployee.email"
+            name="email"
+            required
+          />
+        </div>
+      </div>
+        <div class="form-row" *ngIf="!isEditing">
+    <div class="form-group">
+      <label>Password *</label>
+      <input
+        type="password"
+        [(ngModel)]="currentEmployee.password"
+        name="password"
+        required
+      />
+    </div>
+  </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Position *</label>
+          <input
+            type="text"
+            [(ngModel)]="currentEmployee.position"
+            name="position"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>Department *</label>
+          <select [(ngModel)]="currentEmployee.department" name="department" required>
+            <option value="">Select Department</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Sales">Sales</option>
+            <option value="HR">HR</option>
+            <option value="Finance">Finance</option>
+            <option value="Operations">Operations</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Phone</label>
+          <input
+            type="tel"
+            [(ngModel)]="currentEmployee.phone"
+            name="phone"
+          />
+        </div>
+        <div class="form-group">
+          <label>Salary</label>
+          <input
+            type="number"
+            [(ngModel)]="currentEmployee.salary"
+            name="salary"
+            min="0"
+          />
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Join Date</label>
+          <input
+            type="date"
+            [(ngModel)]="currentEmployee.joinDate"
+            name="joinDate"
+          />
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select [(ngModel)]="currentEmployee.status" name="status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" (click)="closeModal()">
+          Cancel
+        </button>
+        <button type="submit" class="save-btn">
+          {{ isEditing ? 'Update' : 'Save' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

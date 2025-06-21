@@ -1,0 +1,89 @@
+<div class="dashboard">
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <p>Welcome to the Employee Management System</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card employees">
+      <div class="stat-icon">👥</div>
+      <div class="stat-content">
+        <h3>{{ stats.totalEmployees }}</h3>
+        <p style="color: black;">Total Employees</p>
+        <small style="color: black;">{{ stats.activeEmployees }} Active</small>
+      </div>
+    </div>
+
+    <div class="stat-card projects">
+      <div class="stat-icon">📋</div>
+      <div class="stat-content">
+        <h3>{{ stats.totalProjects }}</h3>
+        <p style="color: black;">Total Projects</p>
+        <small style="color: black;">{{ stats.activeProjects }} In Progress</small>
+      </div>
+    </div>
+
+    <div class="stat-card completed">
+      <div class="stat-icon">✅</div>
+      <div class="stat-content">
+        <h3>{{ stats.completedProjects }}</h3>
+        <p style="color: black;">Completed Projects</p>
+        <small style="color: black;">This month</small>
+      </div>
+    </div>
+
+    <div class="stat-card assignments">
+      <div class="stat-icon">🔗</div>
+      <div class="stat-content">
+        <h3>{{ stats.activeProjects * 2 }}</h3>
+        <p style="color: black;" >Active Assignments</p>
+        <small style="color: black;">Current</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Data -->
+  <div class="recent-data">
+    <div class="recent-section">
+      <div class="section-header">
+        <h2>Recent Employees</h2>
+        <a href="/employees" class="view-all">View All</a>
+      </div>
+      <div class="recent-list">
+        <div class="recent-item" *ngFor="let employee of recentEmployees">
+          <div class="item-avatar">{{ employee.name.charAt(0) }}</div>
+          <div class="item-content">
+            <h4>{{ employee.name }}</h4>
+            <p>{{ employee.position }} - {{ employee.department }}</p>
+            <span class="status" [class]="employee.status">{{ employee.status }}</span>
+          </div>
+        </div>
+        <div class="empty-state" *ngIf="recentEmployees.length === 0">
+          <p>No employees found. <a href="/employees">Add your first employee</a></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="recent-section">
+      <div class="section-header">
+        <h2>Recent Projects</h2>
+        <a href="/projects" class="view-all">View All</a>
+      </div>
+      <div class="recent-list">
+        <div class="recent-item" *ngFor="let project of recentProjects">
+          <div class="item-avatar project-avatar">{{ project.name.charAt(0) }}</div>
+          <div class="item-content">
+            <h4>{{ project.name }}</h4>
+            <p>{{ project.clientName }}</p>
+            <span class="status" [class]="project.status">{{ project.status }}</span>
+          </div>
+        </div>
+        <div class="empty-state" *ngIf="recentProjects.length === 0">
+          <p>No projects found. <a href="/projects">Create your first project</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

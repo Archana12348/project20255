@@ -1,0 +1,63 @@
+<div class="layout-container">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.sidebar-closed]="!isSidebarOpen">
+    <div class="sidebar-header">
+      <h2>EMS</h2>
+      <button class="sidebar-toggle" (click)="toggleSidebar()">
+        <span class="hamburger"></span>
+      </button>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <ul>
+        <li>
+          <a routerLink="/dashboard" routerLinkActive="active">
+            <i class="icon">📊</i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/employees" routerLinkActive="active">
+            <i class="icon">👥</i>
+            <span>Employees</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/projects" routerLinkActive="active">
+            <i class="icon">📋</i>
+            <span>Projects</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/assignments" routerLinkActive="active">
+            <i class="icon">🔗</i>
+            <span>Assignments</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content" [class.sidebar-closed]="!isSidebarOpen">
+    <!-- Top Navigation -->
+    <header class="top-nav">
+      <div class="nav-left">
+        <button class="menu-toggle" (click)="toggleSidebar()">☰</button>
+        <h1>Employee Management System</h1>
+      </div>
+      
+      <div class="nav-right">
+        <div class="user-info" *ngIf="currentUser">
+          <span>Welcome, {{ currentUser.email }}</span>
+          <button class="logout-btn" (click)="logout()">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

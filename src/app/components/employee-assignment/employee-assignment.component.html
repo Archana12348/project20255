@@ -1,0 +1,136 @@
+<div class="assignment-portal">
+  <div class="portal-header">
+    <h1>Employee Assignments</h1>
+    <button class="assign-btn" (click)="openAssignModal()">
+      + Assign Employee
+    </button>
+  </div>
+
+  <div class="assignments-container">
+    <div class="assignment-card" *ngFor="let assignment of assignments">
+      <div class="assignment-header">
+        <div class="employee-info">
+          <div class="employee-avatar">
+            {{ assignment.employee.name.charAt(0) }}
+          </div>
+          <div class="employee-details">
+            <h3>{{ assignment.employee.name }}</h3>
+            <p>{{ assignment.employee.position }}</p>
+            <span class="department">{{ assignment.employee.department }}</span>
+          </div>
+        </div>
+        
+        <div class="assignment-arrow">→</div>
+        
+        <div class="project-info">
+          <div class="project-avatar">
+            {{ assignment.project.name.charAt(0) }}
+          </div>
+          <div class="project-details">
+            <h3>{{ assignment.project.name }}</h3>
+            <p>{{ assignment.project.clientName }}</p>
+            <span class="status" [class]="assignment.project.status">
+              {{ assignment.project.status }}
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="assignment-meta">
+        <div class="assignment-date">
+          <span class="label">Assigned:</span>
+          <span class="value">{{ assignment.assignedDate | date:'MMM dd, yyyy' }}</span>
+        </div>
+        <button 
+          class="remove-btn" 
+          (click)="removeAssignment(assignment.employee.id!, assignment.project.id!)">
+          Remove
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="assignments.length === 0">
+    <div class="empty-icon">🔗</div>
+    <h3>No assignments found</h3>
+    <p>Start by assigning employees to projects</p>
+    <button class="assign-btn" (click)="openAssignModal()">
+      + Assign Employee
+    </button>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary-section">
+    <h2>Assignment Summary</h2>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-icon">👥</div>
+        <div class="summary-content">
+          <h3>{{ assignments.length }}</h3>
+          <p>Total Assignments</p>
+        </div>
+      </div>
+      
+      <div class="summary-card">
+        <div class="summary-icon">🏃</div>
+        <div class="summary-content">
+          <h3>{{ getAvailableEmployees().length }}</h3>
+          <p>Available Employees</p>
+        </div>
+      </div>
+      
+      <div class="summary-card">
+        <div class="summary-icon">📋</div>
+        <div class="summary-content">
+          <h3>{{ getAvailableProjects().length }}</h3>
+          <p>Active Projects</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Assignment Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Assign Employee to Project</h2>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+    
+    <form class="modal-form" (ngSubmit)="assignEmployee()">
+      <div class="form-group">
+        <label>Select Employee *</label>
+        <select [(ngModel)]="selectedEmployee" name="employee" required>
+          <option value="">Choose an employee</option>
+          <option 
+            *ngFor="let employee of getAvailableEmployees()" 
+            [value]="employee.id">
+            {{ employee.name }} - {{ employee.position }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Select Project *</label>
+        <select [(ngModel)]="selectedProject" name="project" required>
+          <option value="">Choose a project</option>
+          <option 
+            *ngFor="let project of getAvailableProjects()" 
+            [value]="project.id">
+            {{ project.name }} - {{ project.clientName }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" (click)="closeModal()">
+          Cancel
+        </button>
+        <button type="submit" class="assign-btn">
+          Assign
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

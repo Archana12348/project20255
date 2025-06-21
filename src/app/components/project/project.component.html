@@ -1,0 +1,163 @@
+<div class="project-portal">
+  <div class="portal-header">
+    <h1>Project Management</h1>
+    <div class="header-actions">
+      <div class="search-box">
+        <input
+          type="text"
+          placeholder="Search projects..."
+          [(ngModel)]="searchTerm"
+          (input)="filterProjects()"
+        />
+        <span class="search-icon">🔍</span>
+      </div>
+      <button class="add-btn" (click)="openAddModal()">
+        + Create Project
+      </button>
+    </div>
+  </div>
+
+  <div class="projects-grid">
+    <div class="project-card" *ngFor="let project of filteredProjects">
+      <div class="project-header">
+        <div class="project-avatar">
+          {{ project.name.charAt(0) }}
+        </div>
+        <div class="project-status">
+          <span class="status-badge" [style.background-color]="getStatusColor(project.status)">
+            {{ project.status }}
+          </span>
+        </div>
+      </div>
+      
+      <div class="project-info">
+        <h3>{{ project.name }}</h3>
+        <p class="client">{{ project.clientName }}</p>
+        <p class="description">{{ project.description }}</p>
+        
+        <div class="project-dates">
+          <div class="date-item">
+            <span class="date-label">Start:</span>
+            <span class="date-value">{{ project.startDate | date:'MMM dd, yyyy' }}</span>
+          </div>
+          <div class="date-item">
+            <span class="date-label">End:</span>
+            <span class="date-value">{{ project.endDate | date:'MMM dd, yyyy' }}</span>
+          </div>
+        </div>
+        
+        <div class="project-budget">
+          <span class="budget-label">Budget:</span>
+          <span class="budget-value">${{ project.budget | number }}</span>
+        </div>
+      </div>
+      
+      <div class="project-actions">
+        <button class="edit-btn" (click)="openEditModal(project)">Edit</button>
+        <button class="delete-btn" (click)="deleteProject(project.id!)">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="filteredProjects.length === 0">
+    <div class="empty-icon">📋</div>
+    <h3>No projects found</h3>
+    <p *ngIf="searchTerm">Try adjusting your search criteria</p>
+    <p *ngIf="!searchTerm">Get started by creating your first project</p>
+    <button class="add-btn" (click)="openAddModal()" *ngIf="!searchTerm">
+      + Create Project
+    </button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ isEditing ? 'Edit Project' : 'Create New Project' }}</h2>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+    
+    <form class="modal-form" (ngSubmit)="saveProject()">
+      <div class="form-group">
+        <label>Project Name *</label>
+        <input
+          type="text"
+          [(ngModel)]="currentProject.name"
+          name="name"
+          required
+        />
+      </div>
+      
+      <div class="form-group">
+        <label>Client Name *</label>
+        <input
+          type="text"
+          [(ngModel)]="currentProject.clientName"
+          name="clientName"
+          required
+        />
+      </div>
+      
+      <div class="form-group">
+        <label>Description</label>
+        <textarea
+          [(ngModel)]="currentProject.description"
+          name="description"
+          rows="4"
+        ></textarea>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Start Date *</label>
+          <input
+            type="date"
+            [(ngModel)]="currentProject.startDate"
+            name="startDate"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>End Date *</label>
+          <input
+            type="date"
+            [(ngModel)]="currentProject.endDate"
+            name="endDate"
+            required
+          />
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Budget</label>
+          <input
+            type="number"
+            [(ngModel)]="currentProject.budget"
+            name="budget"
+            min="0"
+          />
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select [(ngModel)]="currentProject.status" name="status">
+            <option value="planning">Planning</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+            <option value="on-hold">On Hold</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" (click)="closeModal()">
+          Cancel
+        </button>
+        <button type="submit" class="save-btn">
+          {{ isEditing ? 'Update' : 'Create' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
